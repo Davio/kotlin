@@ -330,6 +330,122 @@ class NewMultiplatformProjectImportingTest : GradleImportingTestCase() {
     }
 
     @Test
+    fun testDependencyOnRoot() {
+        configureByFiles()
+        importProject()
+        checkProjectStructure(exhaustiveSourceSourceRootList = false) {
+
+            module("project")
+            module("project_commonMain")
+            module("project_commonTest") {
+                moduleDependency("project_commonMain", DependencyScope.TEST)
+            }
+            module("project_jvmMain") {
+                moduleDependency("project_commonMain", DependencyScope.COMPILE)
+            }
+            module("project_jvmTest") {
+                moduleDependency("project_commonMain", DependencyScope.TEST)
+                moduleDependency("project_commonTest", DependencyScope.TEST)
+                moduleDependency("project_jvmMain", DependencyScope.TEST)
+            }
+
+            module("subproject")
+            module("subproject_commonMain") {
+                moduleDependency("project_commonMain", DependencyScope.COMPILE)
+            }
+            module("subproject_commonTest") {
+                moduleDependency("project_commonMain", DependencyScope.TEST)
+                moduleDependency("subproject_commonMain", DependencyScope.TEST)
+            }
+            module("subproject_jvmMain") {
+                moduleDependency("project_commonMain", DependencyScope.COMPILE)
+                moduleDependency("subproject_commonMain", DependencyScope.COMPILE)
+                moduleDependency("project_jvmMain", DependencyScope.COMPILE)
+            }
+            module("subproject_jvmTest") {
+                moduleDependency("project_commonMain", DependencyScope.TEST)
+                moduleDependency("subproject_commonMain", DependencyScope.TEST)
+                moduleDependency("subproject_commonTest", DependencyScope.TEST)
+                moduleDependency("project_jvmMain", DependencyScope.TEST)
+                moduleDependency("subproject_jvmMain", DependencyScope.TEST)
+            }
+
+            /*module("aaa_commonMain") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.COMPILE)
+                moduleDependency("bbb_commonMain", DependencyScope.COMPILE)
+                moduleDependency("ccc_commonMain", DependencyScope.COMPILE)
+            }*/
+            /*module("aaa_commonTest") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.TEST)
+                moduleDependency("aaa_commonMain", DependencyScope.TEST)
+                moduleDependency("bbb_commonMain", DependencyScope.TEST)
+                moduleDependency("ccc_commonMain", DependencyScope.TEST)
+            }
+            module("aaa_jvmMain") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.COMPILE)
+                moduleDependency("aaa_commonMain", DependencyScope.COMPILE)
+                moduleDependency("bbb_commonMain", DependencyScope.COMPILE)
+                moduleDependency("bbb_jvmMain", DependencyScope.COMPILE)
+                moduleDependency("ccc_commonMain", DependencyScope.COMPILE)
+                moduleDependency("ccc_jvmMain", DependencyScope.COMPILE)
+            }
+            module("aaa_jvmTest") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.TEST)
+                moduleDependency("aaa_commonMain", DependencyScope.TEST)
+                moduleDependency("aaa_commonTest", DependencyScope.TEST)
+                moduleDependency("aaa_jvmMain", DependencyScope.TEST)
+                moduleDependency("bbb_commonMain", DependencyScope.TEST)
+                moduleDependency("bbb_jvmMain", DependencyScope.TEST)
+                moduleDependency("ccc_commonMain", DependencyScope.TEST)
+                moduleDependency("ccc_jvmMain", DependencyScope.TEST)
+            }
+            module("bbb")
+            module("bbb_commonMain") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.COMPILE)
+                moduleDependency("ccc_commonMain", DependencyScope.COMPILE)
+            }
+            module("bbb_commonTest") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.TEST)
+                moduleDependency("bbb_commonMain", DependencyScope.TEST)
+                moduleDependency("ccc_commonMain", DependencyScope.TEST)
+            }
+            module("bbb_jvmMain") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.COMPILE)
+                moduleDependency("bbb_commonMain", DependencyScope.COMPILE)
+                moduleDependency("ccc_commonMain", DependencyScope.COMPILE)
+                moduleDependency("ccc_jvmMain", DependencyScope.COMPILE)
+            }
+            module("bbb_jvmTest") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.TEST)
+                moduleDependency("bbb_commonMain", DependencyScope.TEST)
+                moduleDependency("bbb_commonTest", DependencyScope.TEST)
+                moduleDependency("bbb_jvmMain", DependencyScope.TEST)
+                moduleDependency("ccc_commonMain", DependencyScope.TEST)
+                moduleDependency("ccc_jvmMain", DependencyScope.TEST)
+            }
+            module("ccc")
+            module("ccc_commonMain") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.COMPILE)
+            }
+            module("ccc_commonTest") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.TEST)
+                moduleDependency("ccc_commonMain", DependencyScope.TEST)
+            }
+            module("ccc_jvmMain") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.COMPILE)
+                moduleDependency("ccc_commonMain", DependencyScope.COMPILE)
+            }
+            module("ccc_jvmTest") {
+                libraryDependency("Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.0-rc-146", DependencyScope.TEST)
+                moduleDependency("ccc_commonMain", DependencyScope.TEST)
+                moduleDependency("ccc_commonTest", DependencyScope.TEST)
+                moduleDependency("ccc_jvmMain", DependencyScope.TEST)
+            }*/
+        }
+
+    }
+
+    @Test
     fun testNestedDependencies() {
         configureByFiles()
         importProject()
