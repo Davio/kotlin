@@ -34,7 +34,6 @@ sourceSets {
     "main" {
         projectDefault()
         java.srcDir("../idea-analysis/src")
-        resources.srcDir("../idea-analysis/src").apply { include("**/*.properties") }
     }
     "test" {}
 }
